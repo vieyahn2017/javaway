@@ -1,0 +1,105 @@
+﻿RPC framework of DIANPING
+
+
+Pigeon开发指南
+
+Pigeon是一个分布式服务通信框架（RPC），在大众点评内部广泛使用，是大众点评最基础的底层框架之一。
+
+主要特色
+
+除了支持spring schema等配置方式，也支持代码annotation方式发布服务、引用远程服务，并提供原生api接口的用法。
+
+支持http协议，方便非java应用调用pigeon的服务。
+
+序列化方式除了hessian，还支持thrift等。
+
+提供了服务器单机控制台pigeon-console，包含单机服务测试工具。
+
+创新的客户端路由策略，提供服务预热功能，解决线上流量大的service重启时大量超时的问题。
+
+记录每个请求的对象大小、返回对象大小等监控信息。
+
+服务端可对方法设置单独的线程池进行服务隔离，可配置客户端应用的最大并发数进行限流。
+
+依赖
+
+Pigeon依赖JDK1.7+
+
+pom依赖定义：
+
+<dependency>
+    <groupId>com.dianping</groupId>
+    <artifactId>pigeon</artifactId>
+    <version>${pigeon.version}</version>
+</dependency>
+pom里加入以下仓库依赖：
+
+<repositories>
+    <repository>
+        <id>github-dianping-maven-repo</id>
+        <url>https://raw.githubusercontent.com/dianping/maven-repo/master</url>
+        <snapshots>
+        <enabled>true</enabled>
+        <updatePolicy>always</updatePolicy>
+    </snapshots>
+    </repository>
+</repositories>
+pigeon在运行时可能会依赖以下jar包，如果有必要，需要应用自行加上以下jar(版本建议高于或等于以下基础版本)：
+
+<!-- 监控框架依赖，下面的cat依赖是可选的，如果不依赖cat则默认不会有监控功能，如果想接入大众点评的监控框架cat（已经开源），需增加以下依赖（pigeon-monitor-cat代码在https://github.com/wu-xiang/pigeon-monitor-cat） -->
+<dependency>
+    <groupId>com.dianping</groupId>
+    <artifactId>pigeon-monitor-cat</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+</dependency>
+<dependency>
+    <groupId>com.dianping.cat</groupId>
+    <artifactId>cat-core</artifactId>
+    <version>1.3.6-SNAPSHOT</version>
+</dependency>
+
+<!-- 配置框架依赖，下面的lion依赖是可选的，如果不依赖lion则会默认通过本地文件加载配置，如果想接入大众点评的配置框架lion(尚未开源)，需增加以下依赖（pigeon-config-lion代码在https://github.com/wu-xiang/pigeon-config-lion） -->
+<dependency>
+    <groupId>com.dianping</groupId>
+    <artifactId>pigeon-config-lion</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+</dependency>
+<dependency>
+    <groupId>com.dianping.lion</groupId>
+    <artifactId>lion-client</artifactId>
+    <version>0.5.3</version>
+</dependency>
+
+<!-- 加入spring，版本根据自身需要设置，spring.version可以是大多数spring版本如3.2.9.RELEASE -->
+<dependency>
+    <groupId>org.springframework</groupId>
+    <artifactId>spring-context</artifactId>
+    <version>${spring.version}</version>
+</dependency>
+
+<!-- 如果是非tomcat项目需要自行加入servlet-api的jar，servlet.version可以是2.5-20081211 -->
+<dependency>
+    <groupId>org.mortbay.jetty</groupId>
+    <artifactId>servlet-api</artifactId>
+    <version>${servlet.version}</version>
+</dependency>
+
+<!-- 需要自行加入swift的jar，swift.version可以是0.17.0或更高版本 -->
+<dependency>
+    <groupId>com.facebook.swift</groupId>
+    <artifactId>swift-annotations</artifactId>
+    <version>${swift.version}</version>
+    <optional>true</optional>
+</dependency>
+<dependency>
+    <groupId>com.facebook.swift</groupId>
+    <artifactId>swift-codec</artifactId>
+    <version>${swift.version}</version>
+    <optional>true</optional>
+</dependency>
+<dependency>
+    <groupId>com.facebook.swift</groupId>
+    <artifactId>swift-generator</artifactId>
+    <version>${swift.version}</version>
+    <optional>true</optional>
+</dependency>
